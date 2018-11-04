@@ -376,6 +376,13 @@ public abstract class AbstractQueuedSynchronizer
      * Scherer and Michael Scott, along with members of JSR-166
      * expert group, for helpful ideas, discussions, and critiques
      * on the design of this class.
+     *
+     * int waitStatus：
+     * 1、CANCELLED，值为1 。场景：当该线程等待超时或者被中断，需要从同步队列中取消等待，则该线程被置1，即被取消（这里该线程在取消之前是等待状态）。节点进入了取消状态则不再变化；
+     * 2、SIGNAL，值为-1。场景：后继的节点处于等待状态，当前节点的线程如果释放了同步状态或者被取消（当前节点状态置为-1），将会通知后继节点，使后继节点的线程得以运行；
+     * 3、CONDITION，值为-2。场景：节点处于等待队列中，节点线程等待在Condition上，当其他线程对Condition调用了signal()方法后，该节点从等待队列中转移到同步队列中，加入到对同步状态的获取中；
+     * 4、PROPAGATE，值为-3。场景：表示下一次的共享状态会被无条件的传播下去；
+     * 5、INITIAL，值为0，初始状态。
      */
     static final class Node {
         /** Marker to indicate a node is waiting in shared mode */
